@@ -1,0 +1,6 @@
+version: v1
+name: buf.build/prompting/api
+deps:
+  - buf.build/googleapis/googleapis
+  - buf.build/gogo/protobuf
+  - buf.build/opentelemetry/opentelemetry

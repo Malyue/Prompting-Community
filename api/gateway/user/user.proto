@@ -1,0 +1,185 @@
+syntax = "proto3";
+
+package prompting.api.gateway.user;
+option go_package = "prompting/api/gateway/user";
+
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+
+service UserService{
+
+  // 用户注册
+  rpc RegisterUser(UserRegisterReq) returns(google.protobuf.Empty){
+    option(google.api.http) = {
+      post:"/v1/user/register"
+      body:"*"
+    };
+  }
+
+  // 用户登录
+  rpc LoginUser(UserLoginReq) returns(UserLoginResp) {
+    option(google.api.http) = {
+      post:"/v1/user/login"
+      body:"*"
+    };
+  }
+
+  // 登录验证码请求
+  rpc LoginCaptcha(google.protobuf.Empty) returns(CaptchaResp) {
+    option (google.api.http) = {
+      get: "/v1/user/getCaptcha"
+    };
+  }
+
+  // 用户详细信息
+  rpc GetUserInfo(UserDetailInfoReq) returns (UserDetailInfoResp) {
+    option (google.api.http) = {
+      get: "/v1/user/getUserInfo"
+    };
+  }
+
+  // 更新用户
+  rpc UpdateUserInfo(UpdateUserInfoReq) returns (UpdateUserInfoResp) {
+    option (google.api.http) = {
+      post:"/v1/user/updateUserInfo"
+      body:"*"
+    };
+  }
+
+  // 邮箱验证码请求
+//  rpc EmailCaptcha(SendEmailCaptchaReq) returns(google.protobuf.Empty) {
+//    option (google.api.http) = {
+//      get: "/v1/user/sendEmail"
+//    }
+//  }
+
+}
+
+//message User {
+//  string id = 1;
+//  // 用户名/账号
+//  string username = 2;
+//  // 昵称
+//  string nickname = 3;
+//  // 密码
+//  string password = 4;
+//  string email = 5;
+//  string phone = 6;
+//  string avatar = 7;
+//  int64 role = 8;
+//  int64 createdAt = 9;
+//  int64 updatedAt = 10;
+//  int64 deleted = 11;
+//}
+
+// 验证码请求
+message CaptchaReq{
+
+}
+
+// 验证码返回
+message CaptchaResp{
+  string uuid = 1;
+  // 验证码图片
+  string captchaImg = 2;
+}
+
+// 验证码刷新 - 前端限制次数
+message CaptchaFlashReq{
+  string uuid = 1;
+}
+
+message CaptchaFlashResp {
+  string uuid = 1;
+  string captchaImg = 2;
+}
+
+// 登录请求
+message UserLoginReq{
+  string username = 1;
+  string password = 2;
+  // 验证码
+  string captcha = 3;
+}
+
+// 登录返回信息
+message UserLoginResp {
+  string username = 2;
+  string nickname = 3;
+  string avatar = 4;
+}
+
+// 注册
+message UserRegisterReq {
+  string username = 1;
+  string password = 2;
+  string passwordConfirm = 3;
+  // 邮箱校验 - 填了邮箱就得进行校验
+  string email = 4;
+  // 手机号校验暂时不做
+  string phone = 5;
+  string avatar = 6;
+  // 验证码
+  string captcha = 7;
+}
+
+// 邮箱验证发送模块
+message SendEmailCaptchaReq {
+  string email = 1;
+}
+
+
+// 用户详细信息 - id从token之类的里面获取
+message UserDetailInfoReq {
+//  string id = 1;
+}
+
+message UserDetailInfoResp {
+    // 昵称
+    string nickname = 2;
+    string email = 3;
+    string phone = 4;
+    string avatar = 5;
+    int64 role = 6;
+    int64 createdAt = 7;
+}
+
+// 更新用户
+message UpdateUserInfoReq {
+  string nickname = 1;
+  string phone = 2;
+  string avatar = 3;
+}
+
+message UpdateUserInfoResp {
+
+}
+
+// 更新密码
+message UpdatePasswordReq {
+
+}
+
+message UpdatePasswordResp {
+
+}
+
+// 更新邮箱
+message UpdateEmailReq {
+
+}
+
+message UpdateEmailResp {
+
+}
+
+
+// 邮箱校验模块
+//message emailConfirmReq {
+//  string email = 1;
+//  string captcha = 2;
+//}
+//
+//message emailConfirmResp {
+//  string message = 1;
+//}
